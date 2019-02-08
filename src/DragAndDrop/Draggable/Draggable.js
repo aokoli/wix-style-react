@@ -7,7 +7,7 @@ import shallowEqual from 'shallowequal';
 import DraggableSource from './components/DraggableSource';
 import DraggableTarget from './components/DraggableTarget';
 
-export class Draggable extends React.PureComponent {
+export class Draggable extends React.Component {
   state = {
     delayed: false,
   };
