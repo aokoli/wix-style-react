@@ -1,15 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import WixComponent from '../../BaseComponents/WixComponent';
+import shallowEqual from 'shallowequal';
+
+// import WixComponent from '../../BaseComponents/WixComponent';
 import DraggableSource from './components/DraggableSource';
 import DraggableTarget from './components/DraggableTarget';
 
-export class Draggable extends WixComponent {
+export class Draggable extends React.PureComponent {
   state = {
     delayed: false,
   };
   delayTimer = null;
+
+  shouldComponentUpdate({listOfPropsThatAffectItems, ...nextProps}, nextState) {
+    const {listOfPropsThatAffectItems: prevListOfPropsThatAffectItems, ...prevProps} = this.props;
+
+    if (!shallowEqual(nextProps, prevProps) || !shallowEqual(listOfPropsThatAffectItems, prevListOfPropsThatAffectItems)) {
+      return true;
+    }
+    if (!shallowEqual(nextState, this.state)) {
+      return true;
+    }
+
+    return false;
+  }
 
   componentWillUnmount() {
     this.resetDelayTimer();
@@ -129,7 +144,23 @@ Draggable.propTypes = {
   /** callback that could prevent item from dragging */
   canDrag: PropTypes.func,
 
-  delay: PropTypes.number
+  delay: PropTypes.number,
+  /** 
+    In case that you are using some external props inside of renderItems method,
+    you need to define them here.
+
+    renderItem = ({ item }) => <div key={item.id}>{this.props.myAwesomeProp}</div>
+
+    render() {
+      return (
+        <SortableList
+          ...
+          listOfPropsThatAffectItems={[this.props.myAwesomeProp]}
+        />
+      )
+    }
+  */
+ listOfPropsThatAffectItems: PropTypes.array,
 };
 
 export default Draggable;

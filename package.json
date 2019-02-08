@@ -164,6 +164,7 @@
     "react-motion": "^0.4.7",
     "react-portal": "^4.1.5",
     "react-transition-group": "^2.2.1",
+    "shallowequal": "^1.1.0",
     "slate": "^0.20.3",
     "wix-animations": "^1.0.276",
     "wix-eventually": "^2.2.0",

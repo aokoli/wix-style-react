@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 
+import { enzymeTestkitFactoryCreator } from 'wix-ui-test-utils/enzyme';
+
 import TestBackend from '../DragDropContextProvider/TestBackend';
 import DragDropContextProvider from '../DragDropContextProvider';
 import Modal from '../Modal';
@@ -673,5 +675,67 @@ describe('Enzyme: SortableList', () => {
       removedFromContainerId: 'sortable-list',
       removedIndex: 0,
     });
+  });
+
+  it('should call renderItem when props changed', () => {
+    const dataHook = 'sortable-list';
+    const items = [{ id: '1', text: 'item 1' }, { id: '2', text: 'item 2' }];
+    const onDrop = jest.fn();
+
+    class MyComponent extends React.Component {
+      state = {
+        isDragging: false
+      }
+      handleDragStart = () => this.setState({ isDragging: true })
+      handleDragEnd = () => this.setState({ isDragging: false })
+
+      renderItem = ({ item }) => (
+        <div key={item.id} data-hook={`item-${item.id}`} data-drag-value={this.state.isDragging}>
+          {item.text}
+        </div>
+      )
+
+      render() {
+        return (
+          <div>
+            <SortableList
+              contentClassName="cl"
+              dataHook={dataHook}
+              containerId="sortable-list-1"
+              groupName="group1"
+              items={items}
+              renderItem={this.renderItem}
+              onDrop={onDrop}
+              onDragStart={this.handleDragStart}
+              onDragEnd={this.handleDragEnd}
+              listOfPropsThatAffectItems={[this.state.isDragging]}
+            />
+          </div>
+        );
+      }
+    }
+
+    const wrapper = mount(
+      <DragDropContextProvider backend={TestBackend}>
+        <MyComponent />
+      </DragDropContextProvider>,
+    );
+
+    const driver = enzymeTestkitFactoryCreator(privateSortableListDriver)({ wrapper, dataHook });
+
+    driver.beginDrag('1');
+    expect(wrapper.find('[data-hook="item-1"]').getDOMNode().dataset.dragValue).toBe('true');
+    expect(wrapper.find('[data-hook="item-2"]').getDOMNode().dataset.dragValue).toBe('true');
+    driver.endDrag();
+    // here was bug, that state of item not updated
+    expect(wrapper.find('[data-hook="item-1"]').getDOMNode().dataset.dragValue).toBe('false');
+    expect(wrapper.find('[data-hook="item-2"]').getDOMNode().dataset.dragValue).toBe('false');
+
+    driver.reorder({ removedId: '1', addedId: '2' });
+    driver.reorder({ removedId: '2', addedId: '1' });
+    driver.reorder({ removedId: '1', addedId: '2' });
+
+    expect(wrapper.find('[data-hook="item-1"]').getDOMNode().dataset.dragValue).toBe('false');
+    expect(wrapper.find('[data-hook="item-2"]').getDOMNode().dataset.dragValue).toBe('false');
   });
 });

@@ -260,6 +260,7 @@ export default class SortableList extends WixComponent {
           <div className={contentClassName}>
             {this.state.items.map((item, index) => (
               <Draggable
+                listOfPropsThatAffectItems={this.props.listOfPropsThatAffectItems}
                 key={`${item.id}-${containerId}`}
                 shift={this.state.animationShifts[index]}
                 hasDragged={
@@ -319,4 +320,20 @@ SortableList.propTypes = {
   canDrag: PropTypes.func,
   /** number in seconds to add delay between initial mouseDown and drag start  */
   delay: PropTypes.number,
+  /** 
+    In case that you are using some external props inside of renderItems method,
+    you need to define them here.
+
+    renderItem = ({ item }) => <div key={item.id}>{this.props.myAwesomeProp}</div>
+
+    render() {
+      return (
+        <SortableList
+          ...
+          listOfPropsThatAffectItems={[this.props.myAwesomeProp]}
+        />
+      )
+    }
+  */
+  listOfPropsThatAffectItems: PropTypes.array,
 };
