@@ -226,6 +226,13 @@ export default class SortableList extends WixComponent {
     );
   }
 
+  renderItem = (args) => {
+    const dropped =  this.context.dragDropManager.monitor.didDrop();
+    const dragging = this.context.dragDropManager.monitor.isDragging();
+
+    return this.props.renderItem({...args, smthDragging: dragging && !dropped})
+  }
+
   render() {
     const {
       className,
@@ -233,7 +240,6 @@ export default class SortableList extends WixComponent {
       groupName,
       dragPreview,
       containerId,
-      renderItem,
       withHandle,
       usePortal,
       animationDuration,
@@ -272,7 +278,7 @@ export default class SortableList extends WixComponent {
                 id={item.id}
                 index={index}
                 item={item}
-                renderItem={renderItem}
+                renderItem={this.renderItem}
                 withHandle={withHandle}
                 usePortal={usePortal}
                 onDrop={this.handleDrop}
@@ -290,6 +296,10 @@ export default class SortableList extends WixComponent {
 }
 
 SortableList.displayName = 'SortableList';
+
+SortableList.contextTypes = {
+  dragDropManager: PropTypes.object,
+};
 
 SortableList.propTypes = {
   ...Draggable.propTypes,
@@ -320,3 +330,4 @@ SortableList.propTypes = {
   /** number in seconds to add delay between initial mouseDown and drag start  */
   delay: PropTypes.number,
 };
+
