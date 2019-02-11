@@ -126,7 +126,6 @@ class Page extends WixComponent {
     const newHeaderContainerHeight = this.headerContainerRef
       ? this.headerContainerRef.getBoundingClientRect().height
       : 0;
-
     const newMinimizedHeaderContainerHeight = this.minimizedHeaderContainerRef
       ? this.minimizedHeaderContainerRef.getBoundingClientRect().height
       : 0;

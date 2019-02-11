@@ -115,6 +115,7 @@ describe('Page', () => {
       expect(driver.tailExists()).toBeFalsy();
     });
   });
+
   describe('Scroll Header', () => {
     it('should scroll ScrollableContent when getting wheel event on Header', () => {
       const driver = PagePrivateDriver.fromJsxElement(
@@ -128,6 +129,12 @@ describe('Page', () => {
       expect(driver.getScrollAmount()).toBe(0);
       driver.wheelOnFixedContainer(10);
       expect(driver.getScrollAmount()).toBe(10);
+    });
+  });
+
+  describe('DOM calculations', () => {
+    xit('should recalculate component heights when rerendered', () => {
+      // TODO:
     });
   });
 
