@@ -3,6 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { ResizeSensor } from 'css-element-queries';
+import { Animator } from 'wix-animations';
 import { allValidators, extendPropTypes } from '../utils/propTypes';
 import s from './Page.scss';
 import WixComponent from '../BaseComponents/WixComponent';
@@ -10,7 +11,6 @@ import { PageContext } from './PageContext';
 import PageHeader from '../PageHeader';
 import Content from './Content';
 import Tail from './Tail';
-
 import { PageSticky } from './PageSticky';
 
 import {
@@ -128,9 +128,10 @@ class Page extends WixComponent {
     const newHeaderContainerHeight = this.headerContainerRef
       ? this.headerContainerRef.getBoundingClientRect().height
       : 0;
+
     const newMinimizedHeaderContainerHeight = this.minimizedHeaderContainerRef
       ? this.minimizedHeaderContainerRef.getBoundingClientRect().height
-      : 0;
+      : null;
     const newTailHeight = this.pageHeaderTailRef
       ? this.pageHeaderTailRef.offsetHeight
       : 0;
@@ -166,7 +167,9 @@ class Page extends WixComponent {
 
     const { displayMiniHeader, minimizedHeaderContainerHeight } = this.state;
     const nextDisplayMiniHeader =
-      containerScrollTop >= minimizedHeaderContainerHeight;
+      minimizedHeaderContainerHeight === null
+        ? false
+        : containerScrollTop >= minimizedHeaderContainerHeight;
 
     if (displayMiniHeader !== nextDisplayMiniHeader) {
       this.setState({
@@ -259,24 +262,34 @@ class Page extends WixComponent {
     };
   }
 
-  _renderHeader({ minimized } = { minimized: false }) {
+  _renderHeader(
+    { minimized, updateRef, visible } = {
+      minimized: false,
+      updateRef: true,
+      visible: true,
+    },
+  ) {
     const { children } = this.props;
     const childrenObject = getChildrenObject(children);
     const { PageTail, PageHeader: PageHeaderChild } = childrenObject;
     const pageDimensionsStyle = this._getPageDimensionsStyle();
-
     return (
       <div
         className={classNames(s.pageHeaderContainer, {
           [s.minimized]: minimized,
         })}
-        ref={ref => {
-          if (minimized) {
-            this.minimizedHeaderContainerRef = ref;
-          } else {
-            this.headerContainerRef = ref;
-          }
-        }}
+        ref={
+          updateRef
+            ? ref => {
+                if (minimized) {
+                  this.minimizedHeaderContainerRef = ref;
+                } else {
+                  this.headerContainerRef = ref;
+                }
+              }
+            : undefined
+        }
+        style={{ visibility: visible ? undefined : 'hidden' }}
       >
         {PageHeaderChild && (
           <div className={s.pageHeader} style={pageDimensionsStyle}>
@@ -308,7 +321,6 @@ class Page extends WixComponent {
         data-hook="page-fixed-container"
         style={{
           width: scrollBarWidth ? `calc(100% - ${scrollBarWidth}px` : undefined,
-          visibility: displayMiniHeader ? undefined : 'hidden',
         }}
         className={classNames(s.fixedContainer)}
         onWheel={event => {
@@ -316,7 +328,33 @@ class Page extends WixComponent {
             this._getScrollContainer().scrollTop + event.deltaY;
         }}
       >
-        {this._renderHeader({ minimized: true })}
+        <Animator
+          show={displayMiniHeader}
+          timing="medium"
+          opacity
+          translate={{
+            enter: {
+              direction: 'top',
+              size: '50px',
+            },
+            exit: {
+              direction: 'bottom',
+              size: '50px',
+            },
+          }}
+        >
+          {this._renderHeader({
+            minimized: true,
+            updateRef: false,
+            visible: true,
+          })}
+        </Animator>
+        {// We render but with visibility none, in order to measure the height
+        this._renderHeader({
+          minimized: true,
+          updateRef: true,
+          visible: false,
+        })}
       </div>
     );
   }
