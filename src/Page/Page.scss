@@ -3,7 +3,7 @@
 
 $page-side-padding: 48px;
 $scroll-top-threshold: 20px;
-$page-background-color: rgba($D70, .95);
+$page-background-color: $D70;
 $image-container-offset: 30px;
 $pageBottomPadding: 48px; //  Should be synced with JS Page value
 
@@ -141,6 +141,12 @@ $pageBottomPadding: 48px; //  Should be synced with JS Page value
 .contentFullWidth {
   padding-left: 0;
   padding-right: 0;
+}
+
+.sticky {
+  position: sticky;
+  z-index: 1;
+  background-color: $page-background-color; // This fixes non-sticky content from being shown behind sticky content with rounded-corners
 }
 
 .stretchVertically {

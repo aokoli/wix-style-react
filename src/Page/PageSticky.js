@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { PageContext } from './PageContext';
-import s from './PageSticky.scss';
+import s from './Page.scss';
 import classNames from 'classnames';
 
 export const PageSticky = ({ children, className, style, ...props }) => {
