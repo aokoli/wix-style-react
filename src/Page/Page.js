@@ -29,29 +29,13 @@ import deprecationLog from '../utils/deprecationLog';
  *
  * + PageWrapper --------------
  * | +- Page --------------------
- * | | +-- FixedContainer ---------
- * | | | +-- HeaderContainer ------ (Minimizable)
- * | | | |  header-content:padding-top
- * | | | | +-- Page.Header --------
- * | | | | |
- * | | | | |
- * | | | | +-----------------------
- * | | | |  tail:padding-top
- * | | | | +-- Page.Tail ----------
- * | | | | |
- * | | | | |
- * | | | | +-----------------------
- * | | | |  header-content:padding-bottom
- * | | | +-------------------------
- * | | | +-- Page.FixedContent* ----- ==+ Content (Virtual)
- * | | | |                              |
- * | | | +---------------------------   |
+ * | | +-- FixedContainer (* invisible by default) ---------
+ * | | | +-- HeaderContainer (minimized)------
+ * | | | |
+ * | | | +-----------------------
  * | | +-----------------------------   |
  * | | +--  ScrollableContainer -----   |
  * | | | +-- contentWrapper----------   |
- * | | | | +-- Page.FixedContent* ---   |
- * | | | | |                            |
- * | | | | +-------------------------   |
  * | | | | +-- Page.Content ---------   |
  * | | | | |                            |
  * | | | | +-------------------------   |
@@ -60,9 +44,25 @@ import deprecationLog from '../utils/deprecationLog';
  * | +----------------------------- (Page - End)
  * +------------------------------- (PageWrapper - End)
  *
- * -  ScrollableContainer is called in the code scrollable-content, and should NOT be renamed, since
+ * -  ScrollableContainer has a data-classnamed 'scrollable-content', and should NOT be renamed, since
  * Tooltip is hard-coded-ly using a selector like this: [data-class="page-scrollable-content"]
- * - * Page.FixedContent - is In contentWrapper, but when it gets sticky, it moves to the
+ * * FixedContainer* - It is hidden by default, and made visible when scroll amount reaches some threshold
+ */
+
+/*
+ * +-- HeaderContainer ------
+ * |  header-content:padding-top
+ * | +-- Page.Header --------
+ * | |
+ * | |
+ * | +-----------------------
+ * |  tail:padding-top
+ * | +-- Page.Tail ----------
+ * | |
+ * | |
+ * | +-----------------------
+ * |  header-content:padding-bottom
+ * +-------------------------
  */
 
 /**
@@ -81,7 +81,6 @@ class Page extends WixComponent {
     this._handleScroll = this._handleScroll.bind(this);
     this._handleWidthResize = this._handleWidthResize.bind(this);
     this._handleWindowResize = this._handleWindowResize.bind(this);
-    this._renderFixedContent = this._renderFixedContent.bind(this);
 
     this.state = {
       headerContainerHeight: 0,
@@ -89,7 +88,6 @@ class Page extends WixComponent {
       scrollBarWidth: 0,
       displayMiniHeader: false,
       minimizedHeaderContainerHeight: null,
-      isStickyFixedContent: false,
     };
   }
 
@@ -384,23 +382,10 @@ class Page extends WixComponent {
     }
   }
 
-  _renderFixedContent() {
-    const { children } = this.props;
-    const childrenObject = getChildrenObject(children);
-    const { PageFixedContent } = childrenObject;
-    return (
-      PageFixedContent && (
-        <PageSticky data-hook="page-fixed-content">
-          {React.cloneElement(PageFixedContent)}
-        </PageSticky>
-      )
-    );
-  }
-
   _renderContentWrapper() {
     const { children } = this.props;
     const childrenObject = getChildrenObject(children);
-    const { PageContent } = childrenObject;
+    const { PageContent, PageFixedContent } = childrenObject;
 
     const { headerContainerHeight } = this._calculateHeaderMeasurements();
 
@@ -432,7 +417,11 @@ class Page extends WixComponent {
             }}
             className={s.contentFloating}
           >
-            {this._renderFixedContent()}
+            {PageFixedContent && (
+              <PageSticky data-hook="page-fixed-content">
+                {React.cloneElement(PageFixedContent)}
+              </PageSticky>
+            )}
             {this._safeGetChildren(PageContent)}
           </div>
         </div>
