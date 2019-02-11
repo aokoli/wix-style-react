@@ -16,7 +16,7 @@ export const PageSticky = ({ children, className, style, ...props }) => {
           result = (
             <div
               className={classNames(s.sticky, className)}
-              style={{ ...stickyStyle, style }}
+              style={{ ...stickyStyle, ...style }}
               {...props}
             >
               {children}
