@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { ResizeSensor } from 'css-element-queries';
 import { Animator } from 'wix-animations';
-import { allValidators, extendPropTypes } from '../utils/propTypes';
 import s from './Page.scss';
 import WixComponent from '../BaseComponents/WixComponent';
 import { PageContext } from './PageContext';
@@ -542,19 +541,6 @@ Page.propTypes = {
   /** When true the page will use height: 100% and not require a parent of `display: flex;flex-flow: column;`. Also Page.Content's may grow using `min-height: inherit`. Supports Page.Sticky. New header minimization approach.*/
   upgrade: PropTypes.bool, // This Upgrade prop is only for documentation, the actual use is in index.js
 };
-
-extendPropTypes(Page, {
-  upgrade: allValidators(PropTypes.bool, (props, propName, componentName) => {
-    if (!props[propName]) {
-      deprecationLog(
-        `
-${componentName}: New Layout API ! Please set 'upgrade = true' prop to use new Layout API.
-When enabled, the page will use height: 100% and not require a parent of 'display: flex;flex-flow: column;'.
-Also Page.Content's may grow using 'height: 100%'. See docs for more info: https://github.com/wix/wix-style-react/blob/master/src/Page/README.MIGRATION.md`,
-      );
-    }
-  }),
-});
 
 function getChildrenObject(children) {
   return React.Children.toArray(children).reduce((acc, child) => {
