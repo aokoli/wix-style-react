@@ -103,8 +103,6 @@ class Page extends WixComponent {
   }
 
   componentDidUpdate(prevProps) {
-    // TODO: add watch on window.innerHeight - should
-
     super.componentDidUpdate(prevProps);
     this._calculateComponentsHeights();
   }
@@ -113,6 +111,10 @@ class Page extends WixComponent {
     super.componentWillUnmount();
     this.contentResizeListener.detach(this._handleWidthResize);
     window.removeEventListener('resize', this._handleWindowResize);
+  }
+
+  _getNamedChildren() {
+    return this.getChildrenObject(this.props.children);
   }
 
   _calculateComponentsHeights() {
@@ -186,8 +188,19 @@ class Page extends WixComponent {
   }
 
   _handleWindowResize() {
-    // TODO: add optimization - render only when height changes
-    this.forceUpdate();
+    // TODO: Optimize : https://developer.mozilla.org/en-US/docs/Web/Events/resize
+
+    // Taken from here: https://github.com/kunokdev/react-window-size-listener/blob/d64c077fba4d4e0ce060464078c5fc19620528e6/src/index.js#L66
+    const windowHeight =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight;
+
+    if (this.state.windowHeight !== windowHeight) {
+      // We are not using windowHeight directly, since we need to measure the `<Page/>`'s height,
+      // But we hold it in the state to avoid rendering when only window.width changes
+      this.setState({ windowHeight });
+    }
   }
 
   _safeGetChildren(element) {
@@ -198,7 +211,7 @@ class Page extends WixComponent {
     return element.props.children;
   }
 
-  _calculatePageDimensionsStyle() {
+  _getPageDimensionsStyle() {
     const { maxWidth, sidePadding } = this.props;
     if (!maxWidth && !sidePadding && sidePadding !== 0) {
       return null;
@@ -215,30 +228,6 @@ class Page extends WixComponent {
     }
 
     return styles;
-  }
-
-  /**
-   * See diagram in class documentation to better understand this method.
-   */
-  _calculateHeaderMeasurements() {
-    const { children } = this.props;
-    const childrenObject = getChildrenObject(children);
-    const { PageTail } = childrenObject;
-
-    const { gradientCoverTail } = this.props;
-    const { headerContainerHeight, tailHeight } = this.state;
-
-    const imageHeight = `${headerContainerHeight +
-      (PageTail ? -tailHeight : 39)}px`;
-    const gradientHeight = gradientCoverTail
-      ? `${headerContainerHeight + (PageTail ? -SCROLL_TOP_THRESHOLD : 39)}px`
-      : imageHeight;
-
-    return {
-      imageHeight,
-      gradientHeight,
-      headerContainerHeight,
-    };
   }
 
   hasBackgroundImage() {
@@ -260,7 +249,7 @@ class Page extends WixComponent {
     const childrenObject = getChildrenObject(children);
     const { PageContent } = childrenObject;
     const contentFullScreen = PageContent && PageContent.props.fullScreen;
-    const pageDimensionsStyle = this._calculatePageDimensionsStyle();
+    const pageDimensionsStyle = this._getPageDimensionsStyle();
 
     return {
       className: classNames(s.contentHorizontalLayout, {
@@ -270,11 +259,11 @@ class Page extends WixComponent {
     };
   }
 
-  _renderHeader({ minimized }) {
+  _renderHeader({ minimized } = { minimized: false }) {
     const { children } = this.props;
     const childrenObject = getChildrenObject(children);
     const { PageTail, PageHeader: PageHeaderChild } = childrenObject;
-    const pageDimensionsStyle = this._calculatePageDimensionsStyle();
+    const pageDimensionsStyle = this._getPageDimensionsStyle();
 
     return (
       <div
@@ -320,7 +309,6 @@ class Page extends WixComponent {
         data-hook="page-fixed-container"
         style={{
           width: scrollBarWidth ? `calc(100% - ${scrollBarWidth}px` : undefined,
-          // display: displayMiniHeader ? undefined : 'none',
           visibility: displayMiniHeader ? undefined : 'hidden',
         }}
         className={classNames(s.fixedContainer)}
@@ -335,7 +323,6 @@ class Page extends WixComponent {
   }
 
   _renderScrollableContainer() {
-    const { imageHeight, gradientHeight } = this._calculateHeaderMeasurements();
     return (
       <div
         className={s.scrollableContainer}
@@ -344,17 +331,27 @@ class Page extends WixComponent {
         ref={r => this._setScrollContainer(r)}
         onScroll={this._handleScroll}
       >
-        {this._renderScrollableBackground({
-          gradientHeight,
-          imageHeight,
-        })}
-        {this._renderHeader({ minimized: false })}
+        {this._renderScrollableBackground()}
+        {this._renderHeader()}
         {this._renderContentWrapper()}
       </div>
     );
   }
 
-  _renderScrollableBackground({ gradientHeight, imageHeight }) {
+  _renderScrollableBackground() {
+    const { children, gradientCoverTail } = this.props;
+    const childrenObject = getChildrenObject(children);
+    const { PageTail } = childrenObject;
+
+    const { headerContainerHeight, tailHeight } = this.state;
+
+    const imageHeight = `${headerContainerHeight +
+      (PageTail ? -tailHeight : 39)}px`;
+
+    const gradientHeight = gradientCoverTail
+      ? `${headerContainerHeight + (PageTail ? -SCROLL_TOP_THRESHOLD : 39)}px`
+      : imageHeight;
+
     if (this.hasBackgroundImage()) {
       return (
         <div
@@ -386,7 +383,7 @@ class Page extends WixComponent {
     const childrenObject = getChildrenObject(children);
     const { PageContent, PageFixedContent } = childrenObject;
 
-    const { headerContainerHeight } = this._calculateHeaderMeasurements();
+    const { headerContainerHeight } = this.state;
 
     const { pageHeight } = this.state;
 
