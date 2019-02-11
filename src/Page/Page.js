@@ -21,7 +21,6 @@ import {
   mainContainerMinWidthPx as GRID_MIN_WIDTH,
   mainContainerMaxWidthPx as GRID_MAX_WIDTH,
 } from '../Grid/constants';
-import deprecationLog from '../utils/deprecationLog';
 
 /*
  * Page structure is as follows:
