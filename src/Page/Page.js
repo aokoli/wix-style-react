@@ -26,22 +26,22 @@ import deprecationLog from '../utils/deprecationLog';
 /*
  * Page structure is as follows:
  *
- * + PageWrapper --------------
- * | +- Page --------------------
- * | | +-- FixedContainer (* invisible by default) ---------
- * | | | +-- HeaderContainer (minimized)------
+ * + PageWrapper --------------------
+ * | +- Page ------------------------
+ * | | +-- FixedContainer (* invisible by default)
+ * | | | +-- HeaderContainer (minimized)
  * | | | |
- * | | | +-----------------------
- * | | +-----------------------------   |
- * | | +--  ScrollableContainer -----   |
- * | | | +-- contentWrapper----------   |
- * | | | | +-- Page.Content ---------   |
- * | | | | |                            |
- * | | | | +-------------------------   |
- * | | | +---------------------------   |
- * | | +----------------------------- ==+
- * | +----------------------------- (Page - End)
- * +------------------------------- (PageWrapper - End)
+ * | | | +---------------------------
+ * | | +-----------------------------
+ * | | +--  ScrollableContainer -----
+ * | | | +-- contentWrapper----------
+ * | | | | +-- Page.Content ---------
+ * | | | | |
+ * | | | | +-------------------------
+ * | | | +---------------------------
+ * | | +-----------------------------
+ * | +------------------------------- (Page - End)
+ * +--------------------------------- (PageWrapper - End)
  *
  * -  ScrollableContainer has a data-classnamed 'scrollable-content', and should NOT be renamed, since
  * Tooltip is hard-coded-ly using a selector like this: [data-class="page-scrollable-content"]
