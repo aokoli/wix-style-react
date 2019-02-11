@@ -133,11 +133,6 @@ $pageBottomPadding: 48px; //  Should be synced with JS Page value
   position: relative;
 }
 
-.fixedContent {
-  box-sizing: content-box; 
-  position: sticky;
-}
-
 .contentPlaceholder {
   flex-shrink: 0;
   width: 100%;

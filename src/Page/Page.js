@@ -15,7 +15,6 @@ import { PageSticky } from './PageSticky';
 
 import {
   SCROLL_TOP_THRESHOLD,
-  SHORT_SCROLL_TOP_THRESHOLD,
   PAGE_SIDE_PADDING_PX,
   PAGE_BOTTOM_PADDING_PX,
 } from './constants';
@@ -79,7 +78,6 @@ class Page extends WixComponent {
   constructor(props) {
     super(props);
 
-    this._setContainerScrollTopThreshold(false);
     this._handleScroll = this._handleScroll.bind(this);
     this._handleWidthResize = this._handleWidthResize.bind(this);
     this._handleWindowResize = this._handleWindowResize.bind(this);
@@ -151,12 +149,6 @@ class Page extends WixComponent {
         pageHeight: newPageHeight,
       });
     }
-  }
-
-  _setContainerScrollTopThreshold({ shortThreshold }) {
-    this.containerScrollTopThreshold = shortThreshold
-      ? SHORT_SCROLL_TOP_THRESHOLD
-      : SCROLL_TOP_THRESHOLD;
   }
 
   _setScrollContainer(scrollableContainerRef) {
@@ -396,16 +388,11 @@ class Page extends WixComponent {
     const { children } = this.props;
     const childrenObject = getChildrenObject(children);
     const { PageFixedContent } = childrenObject;
-    const { minimizedHeaderContainerHeight } = this.state;
     return (
       PageFixedContent && (
-        <div
-          data-hook="page-fixed-content"
-          className={classNames(s.fixedContent)}
-          style={{ top: `${minimizedHeaderContainerHeight}px` }}
-        >
+        <PageSticky data-hook="page-fixed-content">
           {React.cloneElement(PageFixedContent)}
-        </div>
+        </PageSticky>
       )
     );
   }
@@ -454,13 +441,7 @@ class Page extends WixComponent {
   }
 
   render() {
-    const { className, children, minWidth, upgrade } = this.props;
-
-    const childrenObject = getChildrenObject(children);
-    const { PageTail } = childrenObject;
-    this._setContainerScrollTopThreshold({
-      shortThreshold: PageTail && this.hasGradientClassName(),
-    });
+    const { className, minWidth, upgrade } = this.props;
 
     return (
       <div
@@ -493,7 +474,7 @@ FixedContent.propTypes = {
 Page.displayName = 'Page';
 Page.Header = PageHeader;
 Page.Content = Content;
-Page.FixedContent = FixedContent;
+Page.FixedContent = FixedContent; // TODO: deprecate, use Page.Sticky instead
 Page.Tail = Tail;
 Page.Sticky = PageSticky;
 
