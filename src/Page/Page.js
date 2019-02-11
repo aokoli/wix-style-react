@@ -347,10 +347,6 @@ class Page extends WixComponent {
 
   _renderScrollableContainer() {
     const { imageHeight, gradientHeight } = this._calculateHeaderMeasurements();
-    const {
-      minimizedHeaderContainerHeight,
-      headerContainerHeight,
-    } = this.state;
     return (
       <div
         className={s.scrollableContainer}
@@ -421,7 +417,7 @@ class Page extends WixComponent {
 
     const { headerContainerHeight } = this._calculateHeaderMeasurements();
 
-    const { pageHeight, minimizedHeaderContainerHeight } = this.state;
+    const { pageHeight } = this.state;
 
     const contentHorizontalLayoutProps = this._getContentHorizontalLayoutProps();
     const stretchToHeight =
