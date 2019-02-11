@@ -13,11 +13,13 @@ const Page = props => {
 };
 
 Page.propTypes = {
-  upgrade: allValidators(PropTypes.bool, (props, propName) => {
+  upgrade: allValidators(PropTypes.bool, (props, propName, componentName) => {
     if (!props[propName]) {
-      deprecationLog(
-        `Using "Button" with current API is deprecated. In order to upgrade to the new Button api just use "<Button upgrade/>" and follow "5.1 Button" changed api docs. IMPORTANT! - After upgrading, when you import the react/enzyme "buttonTestkitFactory", you will get an async testkit (all methods are async).`,
-      );
+      deprecationLog(`
+${componentName}: New Layout API ! Please set upgrade=true prop to use new Layout API.
+When enabled, the page will use height: 100% and not require a parent of 'display: flex;flex-flow: column;'.
+Also Page.Content's may grow using 'min-height: inherit'. Supports Page.Sticky. New header minimization approach.
+See docs for more info: https://github.com/wix/wix-style-react/blob/master/src/Page/README.MIGRATION.md`);
     }
   }),
 };
