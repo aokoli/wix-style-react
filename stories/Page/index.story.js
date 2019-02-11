@@ -21,7 +21,7 @@ export default {
   storyName: storySettings.storyName,
   name: 'Page',
   component: Page,
-  componentPath: '../../src/Page',
+  componentPath: '../../src/Page/Page.js',
 
   componentProps: {
     children: [header(), tail, content(false)],
