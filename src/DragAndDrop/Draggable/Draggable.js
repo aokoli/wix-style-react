@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import shallowEqual from 'shallowequal';
 
-// import WixComponent from '../../BaseComponents/WixComponent';
 import DraggableSource from './components/DraggableSource';
 import DraggableTarget from './components/DraggableTarget';
 
