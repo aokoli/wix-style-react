@@ -216,7 +216,7 @@ class ExampleStretchTable extends React.Component {
     );
   }
 
-  renderTable(stickyStyle) {
+  renderTable() {
     const tableData = this.getFilteredData();
     return (
       <Table
@@ -260,7 +260,7 @@ class ExampleStretchTable extends React.Component {
         showSelection
         showLastRowDivider
       >
-        <div style={stickyStyle}>
+        <Page.Sticky>
           <Card>
             <Table.ToolbarContainer>
               {selectionContext =>
@@ -299,13 +299,14 @@ class ExampleStretchTable extends React.Component {
               </Table.EmptyState>
             )}
           </Card>
-        </div>
+        </Page.Sticky>
         <Card stretchVertically>
           <Table.Content titleBarVisible={false} />
         </Card>
       </Table>
     );
   }
+
   render() {
     return (
       <ExamplePageContainer>
@@ -316,23 +317,21 @@ class ExampleStretchTable extends React.Component {
           {header()}
           {tail}
           <Page.Content>
-            {({ stickyStyle }) => (
-              <Container>
-                <Row>
-                  <Card>
-                    <Card.Content>Some Content 1</Card.Content>
-                  </Card>
-                </Row>
-                <Row>{this.renderTable(stickyStyle)}</Row>
+            <Container>
+              <Row>
+                <Card>
+                  <Card.Content>Some Content 1</Card.Content>
+                </Card>
+              </Row>
+              <Row>{this.renderTable()}</Row>
 
-                <Row>
-                  <Card>
-                    <Card.Content>Some Content 2</Card.Content>
-                  </Card>
-                </Row>
-                <Row>{this.renderTable(stickyStyle)}</Row>
-              </Container>
-            )}
+              <Row>
+                <Card>
+                  <Card.Content>Some Content 2</Card.Content>
+                </Card>
+              </Row>
+              <Row>{this.renderTable()}</Row>
+            </Container>
           </Page.Content>
         </Page>
       </ExamplePageContainer>

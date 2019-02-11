@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -7,9 +6,13 @@ import { ResizeSensor } from 'css-element-queries';
 import { allValidators, extendPropTypes } from '../utils/propTypes';
 import s from './Page.scss';
 import WixComponent from '../BaseComponents/WixComponent';
+import { PageContext } from './PageContext';
 import PageHeader from '../PageHeader';
 import Content from './Content';
 import Tail from './Tail';
+
+import { PageSticky } from './PageSticky';
+
 import {
   SCROLL_TOP_THRESHOLD,
   SHORT_SCROLL_TOP_THRESHOLD,
@@ -424,36 +427,33 @@ class Page extends WixComponent {
     const stretchToHeight =
       pageHeight - headerContainerHeight - PAGE_BOTTOM_PADDING_PX;
 
-    let pageContent = PageContent;
-    if (typeof PageContent.props.children === 'function') {
-      pageContent = React.cloneElement(PageContent, {
-        stickyStyle: {
-          position: 'sticky',
-          top: `${minimizedHeaderContainerHeight}px`,
-          zIndex: 1,
-        },
-      });
-    }
-
     return (
-      <div
-        className={classNames(contentHorizontalLayoutProps.className, {
-          [s.contentWrapper]: this.props.upgrade,
-        })}
-        style={{
-          ...contentHorizontalLayoutProps.style,
+      <PageContext.Provider
+        value={{
+          stickyStyle: {
+            top: `${this.state.minimizedHeaderContainerHeight}px`,
+          },
         }}
       >
         <div
+          className={classNames(contentHorizontalLayoutProps.className, {
+            [s.contentWrapper]: this.props.upgrade,
+          })}
           style={{
-            minHeight: `${stretchToHeight}px`,
+            ...contentHorizontalLayoutProps.style,
           }}
-          className={s.contentFloating}
         >
-          {this._renderFixedContent()}
-          {pageContent}
+          <div
+            style={{
+              minHeight: `${stretchToHeight}px`,
+            }}
+            className={s.contentFloating}
+          >
+            {this._renderFixedContent()}
+            {this._safeGetChildren(PageContent)}
+          </div>
         </div>
-      </div>
+      </PageContext.Provider>
     );
   }
 
@@ -499,6 +499,7 @@ Page.Header = PageHeader;
 Page.Content = Content;
 Page.FixedContent = FixedContent;
 Page.Tail = Tail;
+Page.Sticky = PageSticky;
 
 Page.propTypes = {
   /** Background image url of the header beackground */
