@@ -124,7 +124,10 @@ PageTestStories.add('10. Page Example with sidePadding=0', () => (
 
 class PageWithScroll extends React.Component {
   state = { fixedContainerHeight: null };
-  pageHeight = 500;
+  static pageHeight = 500;
+  static pageBottomPadding = 48;
+  static headerContainerHeight = 152;
+  static minimizedHeaderContainerHeight = 66;
 
   static propTypes = {
     extraScroll: PropTypes.number,
@@ -136,6 +139,7 @@ class PageWithScroll extends React.Component {
   static defaultProps = {
     extraScroll: 0,
   };
+  componentDidMount = () => {};
 
   render() {
     let heightProps;
@@ -148,15 +152,12 @@ class PageWithScroll extends React.Component {
     } else if (contentHeight) {
       heightProps = { height: contentHeight };
     } else {
-      const pageBottomPadding = 48;
       const extraScroll = this.props.extraScroll;
-      const fixedContainerHeight = 152;
-      const fixedContentHeight = 35;
+
       const noScrollHeight =
-        this.pageHeight -
-        fixedContainerHeight -
-        (withFixedContent ? fixedContentHeight : 0) -
-        pageBottomPadding;
+        PageWithScroll.pageHeight -
+        PageWithScroll.headerContainerHeight -
+        PageWithScroll.pageBottomPadding;
       heightProps = { height: noScrollHeight + extraScroll };
     }
 
@@ -173,7 +174,6 @@ class PageWithScroll extends React.Component {
                 ...heightProps,
               }}
             />
-            {/* <LongTextContent /> */}
           </Page.Content>
         </Page>
       </PageContainer>
@@ -204,13 +204,29 @@ class PageWithScroll extends React.Component {
     <PageWithScroll {...defaultProps} extraScroll={0} />
   ));
 
-  Stories.add(`${prefix(4)}Scroll - No Minimize`, () => (
+  Stories.add(`${prefix(4)}Scroll - No Mini Header`, () => (
     // Small scroll - lower than the threshold that triggers minimization
     <PageWithScroll {...defaultProps} extraScroll={SCROLL_TOP_THRESHOLD - 2} />
   ));
 
-  Stories.add(`${prefix(5)}Scroll - Minimize + 2px`, () => (
-    // Small scroll - lower than the threshold that triggers minimization
-    <PageWithScroll {...defaultProps} extraScroll={SCROLL_TOP_THRESHOLD + 2} />
-  ));
+  Stories.add(`${prefix(5)}Scroll - Trigger Mini Header`, () => {
+    const scrollAmountForMiniHeader =
+      PageWithScroll.headerContainerHeight -
+      PageWithScroll.minimizedHeaderContainerHeight;
+    return (
+      // Small scroll - lower than the threshold that triggers minimization
+      <PageWithScroll
+        {...defaultProps}
+        extraScroll={scrollAmountForMiniHeader}
+      />
+    );
+  });
+
+  Stories.add(`${prefix(6)}Long`, () => {
+    const arbitraryLong = PageWithScroll.pageHeight;
+    return (
+      // Small scroll - lower than the threshold that triggers minimization
+      <PageWithScroll {...defaultProps} extraScroll={arbitraryLong} />
+    );
+  });
 });
