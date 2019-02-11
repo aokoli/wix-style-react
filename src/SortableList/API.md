@@ -48,6 +48,7 @@
   | animationTiming  | string   | ''           | -          | animation timing function
   | delay            | number   |  -           | -          | number of ms that user should press on item before drag will start
   | canDrag          | func     |  -           | -          | function which will be used before drag start and can prevent it like if returns false: () => false |
+  | listOfPropsThatAffectItems | array     |  -           | -          | Array that contains values that are used inside of renderItem callback.(Change of these values cause re-call of renderItem func) |
 </details>
 
 Some details about complex props
@@ -205,6 +206,81 @@ Some details about complex props
           </div>
         </DragDropContextProvider>
       );
+    }
+  ```
+</details>
+<details>
+  <summary>`onDrop`</summary>
+  This function called with such parameters:
+
+  - `removedIndex` - index of an item previous position inside of original items array
+  - `addedIndex` - index of an item new position inside of new items array
+  - `removedFromContainerId` - id of the container(SortableList instance) from which item was removed
+  - `addedToContainerId` - id of the container(SortableList instance) to which item was dropped
+  - `payload` - original item data
+
+  Example of d&d onDrop callback for drag between two columns(two SortableList)
+
+  ```js
+  handleDrop = ({removedIndex, addedIndex, removedFromContainerId, addedToContainerId, payload}) => {
+    const nextState = copy(this.state);
+    nextState[removedFromContainerId].splice(removedIndex, 1);
+    nextState[addedToContainerId].splice(addedIndex, 0, payload);
+
+    this.setState({...nextState});
+  };
+  ```
+</details>
+<details>
+  <summary>`listOfPropsThatAffectItems`</summary>
+  You can also check SortableList.spec.js(`should call renderItem when props changed`) test.
+
+  ```js
+    ...
+    class MyComponent extends React.Component {
+      state = {
+        isListInDragState: false
+      }
+      handleDragStart = () => this.setState({ isListInDragState: true })
+      handleDragEnd = () => this.setState({ isListInDragState: false })
+
+      /* 
+        GOAL:
+        inside of render item callback we use `isListInDragState` from state,
+        so we expect, that when we will do setState({ isListInDragState: someValue }),
+        the renderItem will call again and render updated state in dom
+      */
+      renderItem = ({ item }) => (
+        <div key={item.id} data-hook={`item-${item.id}`}>
+          {item.text}
+          Is list in drag state? - {this.state.isListInDragState ? 'yes' : 'no'}
+        </div>
+      )
+
+      render() {
+        /* 
+          To achieve our goal from renderItem callback, we need to tell SortableList,
+          that this.state.isListInDragState can affect our items view and that SortableList need to
+          call renderItem again when this.state.isListInDragState changed.
+          To do this we use `listOfPropsThatAffectItems`
+        */
+        return (
+          <div>
+            <SortableList
+              contentClassName="cl"
+              dataHook={dataHook}
+              containerId="sortable-list-1"
+              groupName="group1"
+              items={items}
+              renderItem={this.renderItem}
+              onDrop={onDrop}
+              onDragStart={this.handleDragStart}
+              onDragEnd={this.handleDragEnd}
+              listOfPropsThatAffectItems={[this.state.isListInDragState]}
+            />
+          </div>
+        );
+      }
     }
   ```
 </details>
