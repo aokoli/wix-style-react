@@ -277,7 +277,6 @@ class Page extends WixComponent {
             this.headerContainerRef = ref;
           }
         }}
-        // style={{ position: 'relative' }}
       >
         {PageHeaderChild && (
           <div className={s.pageHeader} style={pageDimensionsStyle}>
