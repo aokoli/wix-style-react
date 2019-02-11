@@ -442,7 +442,6 @@ class Page extends WixComponent {
         })}
         style={{
           ...contentHorizontalLayoutProps.style,
-          minHeight: `calc(100% - ${PAGE_BOTTOM_PADDING_PX}px)`,
         }}
       >
         <div
