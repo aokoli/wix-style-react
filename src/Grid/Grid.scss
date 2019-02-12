@@ -63,7 +63,7 @@ $grid-row-margin-bottom: 30px;
 
 .stretch_vertically_row {
   display: flex;
-  
+  min-height: inherit;
 }
 
 .stretch_vertically_row > [class*='col-'] {

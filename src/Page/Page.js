@@ -134,6 +134,7 @@ class Page extends WixComponent {
       ? this.pageHeaderTailRef.offsetHeight
       : 0;
     const newPageHeight = this.pageRef ? this.pageRef.offsetHeight : 0;
+
     if (
       headerContainerHeight !== newHeaderContainerHeight ||
       minimizedHeaderContainerHeight !== newMinimizedHeaderContainerHeight ||
