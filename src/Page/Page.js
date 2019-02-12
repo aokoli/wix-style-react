@@ -271,6 +271,11 @@ class Page extends WixComponent {
     const childrenObject = getChildrenObject(children);
     const { PageTail, PageHeader: PageHeaderChild } = childrenObject;
     const pageDimensionsStyle = this._getPageDimensionsStyle();
+    const invisibleStyle = {
+      visibility: 'hidden',
+      position: 'absolute',
+      top: '-5000px', // arbitrary out of screen so it doesn't block click events
+    };
     return (
       <div
         className={classNames(s.pageHeaderContainer, {
@@ -287,7 +292,7 @@ class Page extends WixComponent {
               }
             : undefined
         }
-        style={{ visibility: visible ? undefined : 'hidden' }}
+        style={visible ? {} : invisibleStyle}
       >
         {PageHeaderChild && (
           <div className={s.pageHeader} style={pageDimensionsStyle}>
@@ -313,7 +318,6 @@ class Page extends WixComponent {
 
   _renderFixedContainer() {
     const { scrollBarWidth, displayMiniHeader } = this.state;
-
     return (
       <div
         data-hook="page-fixed-container"

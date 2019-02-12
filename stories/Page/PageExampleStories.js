@@ -17,10 +17,10 @@ const PageExampleStories = storiesOf(
 PageExampleStories.add('1. StandAlone', () => <ExampleStandAlone />);
 PageExampleStories.add('2. Standard', () => <ExampleWithAppStructure />);
 PageExampleStories.add('3. Stretched Card', () => <ExampleStretchCard />);
-PageExampleStories.add('3. Stretched Grid', () => <ExampleStretchGrid />);
-PageExampleStories.add('4. Stretched Table In Page', () => (
+PageExampleStories.add('4. Stretched Grid', () => <ExampleStretchGrid />);
+PageExampleStories.add('5. Stretched Table In Page', () => (
   <ExampleStretchTable />
 ));
-PageExampleStories.add('5. Sticky Table With Gap', () => (
+PageExampleStories.add('6. Sticky Table With Gap', () => (
   <ExampleStickyTableWithGap />
 ));

@@ -137,6 +137,10 @@ describe('Page', () => {
       // TODO:
     });
   });
+  describe('Header layer', () => {
+    it('should NOT block clicks on content close to header', () => {});
+    it('should NOT block clicks on content close to header when MiniHeader appears', () => {});
+  });
 
   describe('Prop Validation', () => {
     const stub = (console.error = jest.fn());

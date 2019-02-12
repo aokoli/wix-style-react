@@ -47,6 +47,10 @@ describe('Page', () => {
     });
   };
 
+  describe('Sticky layer', () => {
+    it('should NOT see components with z-index when they go under a sticky item', () => {});
+  });
+
   describe('Header + Content', () => {
     const dataHook = 'story-page';
 

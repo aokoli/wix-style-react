@@ -15,7 +15,7 @@ $zIndexLayerStep: 100;
     - Tooltip uses 2000
     - ToggleButton uses 1000
    */
-$stickyZIndex: 1;
+$stickyZIndex: 11000;
 $minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
 
 .pageWrapper {
