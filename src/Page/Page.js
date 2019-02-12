@@ -13,9 +13,10 @@ import Tail from './Tail';
 import { PageSticky } from './PageSticky';
 
 import {
-  SCROLL_TOP_THRESHOLD,
+  HEADER_BOTTOM_PADDING,
   PAGE_SIDE_PADDING_PX,
   PAGE_BOTTOM_PADDING_PX,
+  BACKGROUND_COVER_CONTENT_PX,
 } from './constants';
 import {
   mainContainerMinWidthPx as GRID_MIN_WIDTH,
@@ -112,7 +113,7 @@ class Page extends WixComponent {
   }
 
   _getNamedChildren() {
-    return this.getChildrenObject(this.props.children);
+    return getChildrenObject(this.props.children);
   }
 
   _calculateComponentsHeights() {
@@ -164,11 +165,17 @@ class Page extends WixComponent {
   _handleScroll() {
     const containerScrollTop = this._getScrollContainer().scrollTop;
 
-    const { displayMiniHeader, minimizedHeaderContainerHeight } = this.state;
+    const {
+      displayMiniHeader,
+      minimizedHeaderContainerHeight,
+      headerContainerHeight,
+    } = this.state;
+    const minimizationDiff =
+      headerContainerHeight - minimizedHeaderContainerHeight;
     const nextDisplayMiniHeader =
       minimizedHeaderContainerHeight === null
         ? false
-        : containerScrollTop >= minimizedHeaderContainerHeight;
+        : containerScrollTop >= minimizationDiff;
 
     if (displayMiniHeader !== nextDisplayMiniHeader) {
       this.setState({
@@ -379,17 +386,16 @@ class Page extends WixComponent {
   }
 
   _renderScrollableBackground() {
-    const { children, gradientCoverTail } = this.props;
-    const childrenObject = getChildrenObject(children);
-    const { PageTail } = childrenObject;
-
+    const { gradientCoverTail } = this.props;
+    const { PageTail } = this._getNamedChildren();
     const { headerContainerHeight, tailHeight } = this.state;
 
     const imageHeight = `${headerContainerHeight +
-      (PageTail ? -tailHeight : 39)}px`;
+      (PageTail ? -tailHeight : BACKGROUND_COVER_CONTENT_PX)}px`;
 
     const gradientHeight = gradientCoverTail
-      ? `${headerContainerHeight + (PageTail ? -SCROLL_TOP_THRESHOLD : 39)}px`
+      ? `${headerContainerHeight +
+          (PageTail ? -HEADER_BOTTOM_PADDING : BACKGROUND_COVER_CONTENT_PX)}px`
       : imageHeight;
 
     if (this.hasBackgroundImage()) {
@@ -469,8 +475,12 @@ class Page extends WixComponent {
     const { className, minWidth } = this.props;
 
     return (
-      <div className={classNames(s.pageWrapper, className)}>
+      <div
+        data-hook="wsr-page-wrapper"
+        className={classNames(s.pageWrapper, className)}
+      >
         <div
+          data-hook="page"
           className={s.page}
           style={{
             minWidth: minWidth + 2 * PAGE_SIDE_PADDING_PX,

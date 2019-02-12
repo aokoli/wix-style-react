@@ -10,6 +10,8 @@ import { header, tail, fixedContent, content } from './PageChildren';
 import { storySettings } from './storySettings';
 import ExampleEmptyState from './ExampleEmptyState';
 import { SCROLL_TOP_THRESHOLD } from '../../src/Page/constants';
+import { ExamplePageContainer } from './ExamplePageContainer';
+import { LongTextContent } from './SomeContentComponent';
 
 const PageContainer = props => {
   return (
@@ -230,3 +232,13 @@ class PageWithScroll extends React.Component {
     );
   });
 });
+
+const BMStories = storiesOf(`${kind}/BM`, module);
+BMStories.add('1. Simple', () => (
+  <ExamplePageContainer>
+    <Page upgrade gradientClassName="background-gradient">
+      <Page.Header title="Hello WSR" />
+      {content()}
+    </Page>
+  </ExamplePageContainer>
+));

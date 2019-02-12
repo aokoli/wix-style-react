@@ -21,6 +21,9 @@ export default {
   storyName: storySettings.storyName,
   name: 'Page',
   component: Page,
+  componentWrapper: ({ component }) => (
+    <div style={{ position: 'relative' }}>{component}</div>
+  ),
   componentPath: '../../src/Page/Page.js',
 
   componentProps: {

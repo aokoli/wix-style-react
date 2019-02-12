@@ -9,6 +9,7 @@ import * as s from './PageTestStoriesDeprecated.scss';
 import { header, tail, fixedContent, content } from './PageChildren';
 import { storySettings } from './storySettings';
 import ExampleEmptyState from './ExampleEmptyState';
+import { ExamplePageContainer } from './ExamplePageContainer';
 
 const PageContainer = props => {
   return (
@@ -145,4 +146,10 @@ storiesOf(kind, module).add('8. Empty State', () => (
   <PageContainer>
     <ExampleEmptyState />
   </PageContainer>
+));
+
+storiesOf(kind, module).add('9. Empty State in BM', () => (
+  <ExamplePageContainer>
+    <ExampleEmptyState />
+  </ExamplePageContainer>
 ));

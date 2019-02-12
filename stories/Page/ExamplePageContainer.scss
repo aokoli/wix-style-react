@@ -37,6 +37,11 @@ $sideBarWidth: 220px;
   height: 100%;
   width: $sideBarWidth;
   background-color:rgb(35, 38, 60);
+
+  .sideBarContent {
+    color: white;
+    width: 220px;
+  }
 }
 
 .rightSide {
@@ -47,7 +52,7 @@ $sideBarWidth: 220px;
   direction: ltr;
   background: #f0f4f7;
 
-  .mainMainContentContainer {
+  .mainContentContainer {
     flex-grow: 1;
     height: 100%;
     position: relative;

@@ -2,7 +2,7 @@
 @import '../Grid/GridConstants.scss';
 
 $page-side-padding: 48px;
-$scroll-top-threshold: 20px;
+$headerBottomPadding: 24px;
 $page-background-color: $D70;
 $image-container-offset: 30px;
 $pageBottomPadding: 48px; //  Should be synced with JS Page value
@@ -16,22 +16,11 @@ $zIndexLayerStep: 100;
     - ToggleButton uses 1000
    */
 $stickyZIndex: 11000;
-$minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
+$fixedContainerZIndex: $stickyZIndex + $zIndexLayerStep;
 
 .pageWrapper {
   overflow-x: auto;
-
-  // This works inside the BM's content-area
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-
-  // These are extra for robustness if Page is in other type of containers
   height: 100%;
-  width: 100%;
-  flex: 1 0 0;
 }
 
 .page {
@@ -43,7 +32,7 @@ $minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
 
 .fixedContainer {
   position: absolute;
-  z-index: 2;
+  z-index: $fixedContainerZIndex;
   min-height: 30px;
   box-sizing: border-box;
   margin: 0 auto;
@@ -54,25 +43,26 @@ $minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
 .pageHeaderContainer {
   position: relative;
   padding-top: 30px;
-  padding-bottom: $scroll-top-threshold;
+  padding-bottom: $headerBottomPadding;
   
   &.minimized {
     padding-top: 18px;
     padding-bottom: 18px;
     background-color: $page-background-color;
-    z-index: $minimizedHeaderZIndex
+    
+    border: 1px solid $D60;
   }
 }
 
 .pageHeader {
   padding: 0 $page-side-padding;
   margin: 0 auto;
-  z-index: $minimizedHeaderZIndex
+  z-index: $fixedContainerZIndex
 }
 
 .tail {
   background-color: transparent;
-  padding: $scroll-top-threshold $page-side-padding 0;
+  padding: $headerBottomPadding $page-side-padding 0;
   margin: 0 auto;
 
   &.minimized {

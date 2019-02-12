@@ -14,7 +14,9 @@ const PageExampleStories = storiesOf(
 );
 
 PageExampleStories.add('1. StandAlone', () => <ExampleStandAlone />);
-PageExampleStories.add('2. Standard', () => <ExampleWithAppStructure />);
+PageExampleStories.add('2. With App Structure', () => (
+  <ExampleWithAppStructure />
+));
 PageExampleStories.add('3. Stretched Grid', () => <ExampleStretchGrid />);
 PageExampleStories.add('4. Stretched Table In Page', () => (
   <ExampleStretchTable />
