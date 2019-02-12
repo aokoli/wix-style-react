@@ -4,7 +4,8 @@ import { Category } from '../storiesHierarchy';
 
 import ExampleStandAlone from './ExampleStandAlone';
 import ExampleWithAppStructure from './ExampleWithAppStructure';
-import ExampleStretchContent from './ExampleStretchContent';
+import ExampleStretchCard from './ExampleStretchCard';
+import ExampleStretchGrid from './ExampleStretchGrid';
 import ExampleStretchTable from './ExampleStretchTable';
 import ExampleStickyTableWithGap from './ExampleStickyTableWithGap';
 
@@ -15,7 +16,8 @@ const PageExampleStories = storiesOf(
 
 PageExampleStories.add('1. StandAlone', () => <ExampleStandAlone />);
 PageExampleStories.add('2. Standard', () => <ExampleWithAppStructure />);
-PageExampleStories.add('3. Stretched Content', () => <ExampleStretchContent />);
+PageExampleStories.add('3. Stretched Card', () => <ExampleStretchCard />);
+PageExampleStories.add('3. Stretched Grid', () => <ExampleStretchGrid />);
 PageExampleStories.add('4. Stretched Table In Page', () => (
   <ExampleStretchTable />
 ));
