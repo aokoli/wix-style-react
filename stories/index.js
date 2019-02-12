@@ -28,6 +28,7 @@ import './Grid';
 import './Card';
 
 // 3. Inputs
+import './TextInput/index.story'; // 3.1. Text Input
 import './TextField'; // 3.1 Text Field
 import './TextArea'; // 3.2a Text Area
 import './RichTextAreaComposite'; // 3.2b RichTextAreaComposite
