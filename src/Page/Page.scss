@@ -62,7 +62,7 @@ $fixedContainerZIndex: $stickyZIndex + $zIndexLayerStep;
     padding-bottom: 18px;
     background-color: $page-background-color;
     
-    border: 1px solid $D60;
+    border-bottom: 1px solid $D60;
   }
 
   .pageHeader {
