@@ -231,6 +231,30 @@ class PageWithScroll extends React.Component {
       <PageWithScroll {...defaultProps} extraScroll={arbitraryLong} />
     );
   });
+
+  Stories.add(`${prefix(7)}Multiple Stickies`, () => {
+    return (
+      <PageContainer>
+        <Page {...defaultPageProps}>
+          {header()}
+          <Page.Content>
+            {[1, 2, 3, 4, 5, 6].map(i => {
+              return (
+                <div>
+                  <Page.Sticky style={{ height: '50px', background: 'grey' }}>
+                    Sticky {i}
+                  </Page.Sticky>
+                  <div style={{ height: '200px', background: 'white' }}>
+                    Gap {i}
+                  </div>
+                </div>
+              );
+            })}
+          </Page.Content>
+        </Page>
+      </PageContainer>
+    );
+  });
 });
 
 const BMStories = storiesOf(`${kind}/BM`, module);
