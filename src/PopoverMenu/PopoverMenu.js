@@ -40,6 +40,7 @@ class PopoverMenu extends WixComponent {
     zIndex: number,
     showArrow: bool,
     onShow: func,
+    onHide: func,
   };
 
   static defaultProps = {
@@ -107,6 +108,7 @@ class PopoverMenu extends WixComponent {
         zIndex={this.props.zIndex}
         showArrow={this.props.showArrow}
         onShow={this.props.onShow}
+        onHide={this.props.onHide}
       >
         <Button type="button" height={buttonHeight} theme={buttonTheme}>
           <More />
