@@ -7,6 +7,17 @@ $page-background-color: $D70;
 $image-container-offset: 30px;
 $pageBottomPadding: 48px; //  Should be synced with JS Page value
 
+$zIndexLayerStep: 100;
+/* z-index is needed so that non-sticky content with 'position: relative' would not overlay above the sticky content.
+   Need to be height than any component that may fit into a sticky page content.
+   Currently:
+    - InputErrorSuffix uses 10000 (Likely to appear in a sticky TableToolbar)
+    - Tooltip uses 2000
+    - ToggleButton uses 1000
+   */
+$stickyZIndex: 1;
+$minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
+
 .pageWrapper {
   overflow-x: auto;
   height: 100%;
@@ -38,12 +49,14 @@ $pageBottomPadding: 48px; //  Should be synced with JS Page value
     padding-top: 18px;
     padding-bottom: 18px;
     background-color: $page-background-color;
+    z-index: $minimizedHeaderZIndex
   }
 }
 
 .pageHeader {
   padding: 0 $page-side-padding;
   margin: 0 auto;
+  z-index: $minimizedHeaderZIndex
 }
 
 .tail {
@@ -126,14 +139,7 @@ $pageBottomPadding: 48px; //  Should be synced with JS Page value
 
 .sticky {
   position: sticky;
-  /* z-index is needed so that non-sticky content with 'position: relative' would not overlay above the sticky content.
-   Need to be height than any component that may fit into a sticky page content.
-   Currently:
-    - InputErrorSuffix uses 10000 (Likely to appear in a sticky TableToolbar)
-    - Tooltip uses 2000
-    - ToggleButton uses 1000
-   */
-  z-index: 11000;
+  z-index: $stickyZIndex;
   background-color: $page-background-color; // This fixes non-sticky content from being shown behind sticky content with rounded-corners
 }
 
