@@ -20,7 +20,18 @@ $minimizedHeaderZIndex: $stickyZIndex + $zIndexLayerStep;
 
 .pageWrapper {
   overflow-x: auto;
+
+  // This works inside the BM's content-area
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+
+  // These are extra for robustness if Page is in other type of containers
   height: 100%;
+  width: 100%;
+  flex: 1 0 0;
 }
 
 .page {
