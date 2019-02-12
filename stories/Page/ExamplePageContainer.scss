@@ -1,4 +1,6 @@
-/* These styles try to immitate the current BusinessManager's styles. */
+/* These styles try to immitate the current BusinessManager's styles.
+   Created by running the business-manager-test-app and copying the relevant DOM structure and styles.
+ */
 
 $headerHeight: 48px;
 $sideBarWidth: 220px;
@@ -37,11 +39,35 @@ $sideBarWidth: 220px;
   background-color:rgb(35, 38, 60);
 }
 
-.pageContainer {
+.rightSide {
   flex: 1 1 0%;
   display: flex;
   flex-direction: column;
   position: relative;
   direction: ltr;
   background: #f0f4f7;
+
+  .mainMainContentContainer {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+
+    .mainContent {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+
+      .withLoadingIndicatorWrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        
+        .withLoadingIndicatorContainer {
+          height: 100%;
+        }
+      }
+    }
+  }
 }

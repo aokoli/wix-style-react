@@ -8,7 +8,15 @@ export const ExamplePageContainer = ({ children }) => (
     <div className={s.header} />
     <div className={s.body}>
       <div className={s.sideBar}>SideBar</div>
-      <div className={s.pageContainer}>{children}</div>
+      <div className={s.rightSide}>
+        <div className={s.mainContentContainer}>
+          <div className={s.mainContent}>
+            <div className={s.withLoadingIndicatorWrapper}>
+              <div className={s.withLoadingIndicatorContainer}>{children}</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 );
