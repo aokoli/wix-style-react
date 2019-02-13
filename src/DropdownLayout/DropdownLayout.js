@@ -22,6 +22,8 @@ class DropdownLayout extends WixComponent {
     this.state = {
       hovered: NOT_HOVERED_INDEX,
       selectedId: props.selectedId,
+      footerHeight: 0,
+      headerHeight: 0,
     };
 
     this._onSelect = this._onSelect.bind(this);
@@ -207,8 +209,12 @@ class DropdownLayout extends WixComponent {
     }
   }
 
-  _renderNode(node) {
-    return node ? <div className={styles.node}>{node}</div> : null;
+  _renderNode(node, ref) {
+    return node ? (
+      <div className={styles.node} ref={ref}>
+        {node}
+      </div>
+    ) : null;
   }
 
   _wrapWithInfiniteScroll = scrollableElement => (
@@ -272,10 +278,21 @@ class DropdownLayout extends WixComponent {
               : undefined,
           }}
         >
-          {this._renderNode(fixedHeader)}
+          {this._renderNode(fixedHeader, c => {
+            if (c && this.state.headerHeight !== c.offsetHeight)
+              this.setState({ headerHeight: c.offsetHeight });
+          })}
           <div
             className={styles.options}
-            style={{ maxHeight: this.props.maxHeightPixels - 35 + 'px' }}
+            style={{
+             maxHeight:
+                fixedFooter || fixedHeader
+                  ? this.props.maxHeightPixels -
+                    this.state.footerHeight -
+                    this.state.headerHeight +
+                    'px'
+                  : this.props.maxHeightPixels - 35 + 'px',
+            }}
             ref={_options => (this.options = _options)}
             data-hook="dropdown-layout-options"
           >
@@ -283,7 +300,10 @@ class DropdownLayout extends WixComponent {
               ? this._wrapWithInfiniteScroll(renderedOptions)
               : renderedOptions}
           </div>
-          {this._renderNode(fixedFooter)}
+          {this._renderNode(fixedFooter, c => {
+            if (c && this.state.footerHeight !== c.offsetHeight)
+              this.setState({ footerHeight: c.offsetHeight });
+          })}
         </div>
         {this._renderTopArrow()}
       </div>
