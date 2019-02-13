@@ -12,9 +12,13 @@ import { storySettings } from '../../stories/Page/storySettings';
 const { category, storyName } = storySettings;
 
 const testStoryUrl = testName =>
-  createTestStoryUrl({ category, storyName, testName });
+  createTestStoryUrl({
+    category,
+    storyName: `${storyName}/Deprecated`,
+    testName,
+  });
 
-describe('Page', () => {
+describe('Page Deprecated', () => {
   const initTest = async ({ storyUrl, dataHook }) => {
     await browser.get(storyUrl);
     const driver = pageTestkitFactory({ dataHook });
