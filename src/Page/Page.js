@@ -80,6 +80,9 @@ class Page extends WixComponent {
     this._handleScroll = this._handleScroll.bind(this);
     this._handleWidthResize = this._handleWidthResize.bind(this);
     this._handleWindowResize = this._handleWindowResize.bind(this);
+    this._calculateComponentsHeights = this._calculateComponentsHeights.bind(
+      this,
+    );
 
     this.state = {
       headerContainerHeight: 0,
@@ -96,9 +99,16 @@ class Page extends WixComponent {
       this._getScrollContainer().childNodes[0],
       this._handleWidthResize,
     );
+
     this._calculateComponentsHeights();
     this._handleWidthResize();
     window.addEventListener('resize', this._handleWindowResize);
+
+    // TODO: Hack to fix cases where initial measurment of headerContainerHeight is not correct (need to investigate)
+    // Happens in PageTestStories -> PageWithScroll -> 5. Scroll - Trigger Mini Header
+    // Maybe there is a transition
+    const ARBITRARY_SHORT_DURATION_MS = 100;
+    setTimeout(this._calculateComponentsHeights, ARBITRARY_SHORT_DURATION_MS);
   }
 
   componentDidUpdate(prevProps) {
@@ -170,8 +180,10 @@ class Page extends WixComponent {
       minimizedHeaderContainerHeight,
       headerContainerHeight,
     } = this.state;
+
     const minimizationDiff =
       headerContainerHeight - minimizedHeaderContainerHeight;
+
     const nextDisplayMiniHeader =
       minimizedHeaderContainerHeight === null
         ? false

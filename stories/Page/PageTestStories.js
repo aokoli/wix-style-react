@@ -9,9 +9,7 @@ import * as s from './PageTestStories.scss';
 import { header, tail, fixedContent, content } from './PageChildren';
 import { storySettings } from './storySettings';
 import ExampleEmptyState from './ExampleEmptyState';
-import { SCROLL_TOP_THRESHOLD } from '../../src/Page/constants';
 import { ExamplePageContainer } from './ExamplePageContainer';
-import { LongTextContent } from './SomeContentComponent';
 
 const PageContainer = props => {
   return (
@@ -25,11 +23,10 @@ PageContainer.propTypes = {
 };
 
 const kind = getTestStoryKind(storySettings);
-const dataHook = 'story-page';
 
 const defaultPageProps = {
   upgrade: true,
-  dataHook: dataHook,
+  dataHook: storySettings.dataHook,
   gradientClassName: 'background-gradient',
   children: [header(), content()],
 };
@@ -126,10 +123,7 @@ PageTestStories.add('10. Page Example with sidePadding=0', () => (
 
 class PageWithScroll extends React.Component {
   state = { fixedContainerHeight: null };
-  static pageHeight = 500;
-  static pageBottomPadding = 48;
-  static headerContainerHeight = 152;
-  static minimizedHeaderContainerHeight = 66;
+  static Constants = storySettings.PageWithScrollConstants;
 
   static propTypes = {
     extraScroll: PropTypes.number,
@@ -157,14 +151,16 @@ class PageWithScroll extends React.Component {
       const extraScroll = this.props.extraScroll;
 
       const noScrollHeight =
-        PageWithScroll.pageHeight -
-        PageWithScroll.headerContainerHeight -
-        PageWithScroll.pageBottomPadding;
+        PageWithScroll.Constants.pageHeight -
+        PageWithScroll.Constants.headerContainerHeight -
+        PageWithScroll.Constants.pageBottomPadding;
       heightProps = { height: noScrollHeight + extraScroll };
     }
 
     return (
-      <PageContainer style={{ height: `${this.pageHeight}px` }}>
+      <PageContainer
+        style={{ height: `${PageWithScroll.Constants.pageHeight}px` }}
+      >
         <Page {...defaultPageProps} ref={ref => (this.pageInstance = ref)}>
           {header()}
           {withFixedContent && fixedContent}
@@ -208,24 +204,24 @@ class PageWithScroll extends React.Component {
 
   Stories.add(`${prefix(4)}Scroll - No Mini Header`, () => (
     // Small scroll - lower than the threshold that triggers minimization
-    <PageWithScroll {...defaultProps} extraScroll={SCROLL_TOP_THRESHOLD - 2} />
+    <PageWithScroll
+      {...defaultProps}
+      extraScroll={PageWithScroll.Constants.scrollTrigger - 1}
+    />
   ));
 
   Stories.add(`${prefix(5)}Scroll - Trigger Mini Header`, () => {
-    const scrollAmountForMiniHeader =
-      PageWithScroll.headerContainerHeight -
-      PageWithScroll.minimizedHeaderContainerHeight;
     return (
       // Small scroll - lower than the threshold that triggers minimization
       <PageWithScroll
         {...defaultProps}
-        extraScroll={scrollAmountForMiniHeader}
+        extraScroll={PageWithScroll.Constants.scrollTrigger}
       />
     );
   });
 
   Stories.add(`${prefix(6)}Long`, () => {
-    const arbitraryLong = PageWithScroll.pageHeight;
+    const arbitraryLong = PageWithScroll.Constants.pageHeight;
     return (
       // Small scroll - lower than the threshold that triggers minimization
       <PageWithScroll {...defaultProps} extraScroll={arbitraryLong} />

@@ -1,10 +1,11 @@
 import { eyesItInstance } from '../../test/utils/eyes-it';
 import eventually from 'wix-eventually';
-
 import { pageTestkitFactory } from '../../testkit/protractor';
+import { pagePrivateDriverFactory } from './Page.protractor.driver.private';
 import {
   waitForVisibilityOf,
   scrollToElement,
+  protractorTestkitFactoryCreator,
 } from 'wix-ui-test-utils/protractor';
 import { createTestStoryUrl } from '../../test/utils/storybook-helpers';
 import { storySettings } from '../../stories/Page/storySettings';
@@ -160,5 +161,119 @@ describe('Page', () => {
 
   eyes.it('should have short content stretched vertically', async () => {
     await browser.get(testStoryUrl('12. Page Example with stretchVertically'));
+  });
+
+  describe('Vertical Scroll', () => {
+    const dataHook = storySettings.dataHook;
+    const privateDriver = protractorTestkitFactoryCreator(
+      pagePrivateDriverFactory,
+    )({ dataHook });
+    const ENOUGH_SCROLL_TO_MINIMIZE = 200;
+    const SCROLL_TO_BOTTOM = 3000;
+    const ANIMATION_DURATION_MS = 200;
+    const Constants = storySettings.PageWithScrollConstants;
+
+    const testScrollStoryUrl = testName =>
+      createTestStoryUrl({
+        category,
+        storyName: `${storyName}/Scroll`,
+        testName,
+      });
+
+    describe('1. Short Content', () => {
+      eyes.it('should not have scroll', async () => {
+        await initTest({
+          storyUrl: testScrollStoryUrl('1. Short Content'),
+          dataHook,
+        });
+        await privateDriver.scrollVertically(ENOUGH_SCROLL_TO_MINIMIZE);
+        expect(await privateDriver.getVeriticalScroll()).toBe(0);
+      });
+    });
+
+    describe('2. Stretch Vertically', () => {
+      eyes.it('should not have scroll', async () => {
+        await initTest({
+          storyUrl: testScrollStoryUrl('2. Stretch Vertically'),
+          dataHook,
+        });
+        await privateDriver.scrollVertically(ENOUGH_SCROLL_TO_MINIMIZE);
+        expect(await privateDriver.getVeriticalScroll()).toBe(0);
+      });
+    });
+
+    describe('3. Max Height No Scroll', () => {
+      eyes.it('should not have scroll', async () => {
+        await initTest({
+          storyUrl: testScrollStoryUrl('3. Max Height No Scroll'),
+          dataHook,
+        });
+        await privateDriver.scrollVertically(ENOUGH_SCROLL_TO_MINIMIZE);
+        expect(await privateDriver.getVeriticalScroll()).toBe(0);
+      });
+    });
+
+    describe('4. Scroll - No Mini Header', () => {
+      eyes.it(
+        'should scroll exactly 1px before triggering the mini-header',
+        async () => {
+          await initTest({
+            storyUrl: testScrollStoryUrl('4. Scroll - No Mini Header'),
+            dataHook,
+          });
+          await privateDriver.scrollVertically(ENOUGH_SCROLL_TO_MINIMIZE);
+          expect((await privateDriver.getVeriticalScroll()) > 0).toBeTruthy();
+        },
+      );
+    });
+
+    describe('5. Scroll - Trigger Mini Header', () => {
+      eyes.it(
+        'should scroll exactly to the point where mini-header is triggered',
+        async () => {
+          await initTest({
+            storyUrl: testScrollStoryUrl('5. Scroll - Trigger Mini Header'),
+            dataHook,
+          });
+          await privateDriver.scrollVertically(300);
+          await browser.sleep(ANIMATION_DURATION_MS + 100); // eslint-disable-line no-restricted-properties
+          expect((await privateDriver.getVeriticalScroll()) > 0).toBeTruthy();
+        },
+      );
+    });
+
+    describe('6. Long', () => {
+      eyes.it('should not have scroll', async () => {
+        await initTest({
+          storyUrl: testScrollStoryUrl('6. Long'),
+          dataHook,
+        });
+        await privateDriver.scrollVertically(SCROLL_TO_BOTTOM);
+
+        await browser.sleep(ANIMATION_DURATION_MS + 100); // eslint-disable-line no-restricted-properties
+        expect((await privateDriver.getVeriticalScroll()) > 0).toBeTruthy();
+      });
+    });
+
+    describe('7. Multiple Stickies', () => {
+      eyes.it('should scroll and trigger mini-header', async () => {
+        const GAP_HEIGHT_PX = 200;
+        const STICKY_HEIGHT = 50;
+
+        await initTest({
+          storyUrl: testScrollStoryUrl('7. Multiple Stickies'),
+          dataHook,
+        });
+        await privateDriver.scrollVertically(Constants.scrollTrigger + 1);
+        await browser.sleep(ANIMATION_DURATION_MS + 100); // eslint-disable-line no-restricted-properties
+        await eyes.checkWindow('trigger mini-header');
+
+        await privateDriver.scrollVertically(GAP_HEIGHT_PX / 2);
+        await eyes.checkWindow('first gap scrolled half way');
+
+        await privateDriver.scrollVertically(GAP_HEIGHT_PX / 2 + STICKY_HEIGHT);
+        await eyes.checkWindow('second sticky at top');
+      });
+    });
   });
 });
