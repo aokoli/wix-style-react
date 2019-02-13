@@ -142,7 +142,7 @@ import './Builders/ContactItemBuilder';
 // Tests
 import './Typography/TypographyTestStories';
 import './Input/InputTestStories';
-import './Page/PageTestStories.js'; // Tests/2. Layout/2.5 + Page/
+import './Page/PageTestStoriesDeprecated.js'; // Tests/2. Layout/2.5 + Page/Deprecated
 import './PageHeader/PageHeaderTestStories.js'; // Tests/2. Layout/2.5 + PageHeader/
 import './Button/testButton'; // Tests/5. Button/5.1 Button
 import './IconButton/testStory'; // Tests/5. Button/5.2 IconButton
