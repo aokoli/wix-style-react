@@ -113,7 +113,7 @@ export default class PageHeader extends WixComponent {
     } = this.props;
     const breadcrumbsExists = !!breadcrumbs;
     const { themedBreadcrumbs } = this.state;
-
+    const _title = getTitle(title, minimized);
     return (
       <div className={classNames(s.headerContainer, className)}>
         <div className={s.header}>
@@ -168,8 +168,11 @@ export default class PageHeader extends WixComponent {
                     })}
                     data-hook="page-header-title"
                   >
-                    <Heading light={isDarkTheme(hasBackgroundImage, minimized)}>
-                      {getTitle(title, minimized)}
+                    <Heading
+                      ellipsis={typeof _title === 'string'}
+                      light={isDarkTheme(hasBackgroundImage, minimized)}
+                    >
+                      {_title}
                     </Heading>
                   </div>,
                 )}
@@ -182,6 +185,7 @@ export default class PageHeader extends WixComponent {
                     data-hook="page-header-subtitle"
                   >
                     <Text
+                      ellipsis={typeof subtitle === 'string'}
                       light={isDarkTheme(hasBackgroundImage, minimized)}
                       secondary={!isDarkTheme(hasBackgroundImage, minimized)}
                     >

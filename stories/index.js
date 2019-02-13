@@ -66,7 +66,8 @@ import './Breadcrumbs/index.story.js'; // 6.2 + Breadcrumbs
 import './Tabs'; // 6.3 Tabs
 
 // 7. Tooltips
-import './Tooltip/Composite/CompositeStory'; // 7.1 Tooltip, 7.2 Popover
+import './Tooltip/Composite/CompositeStory'; // 7.1 Tooltip
+import './Popover/index.story'; //7.2 Popover
 import './PopoverMenu/index.story'; // 7.3 Popover Menu
 
 // 8. Notification Bars
@@ -123,7 +124,6 @@ import './InputArea/index.story.js';
 import './Layout/index.story.js';
 import './Layout';
 import './components/MultiSelect/index.story';
-import './Popover/index.story';
 import './Proportion/index.story.js';
 import './Skeleton.story.js';
 import './Text/index.story';
@@ -140,6 +140,7 @@ import './Builders/ContactItemBuilder';
 
 // Tests
 import './Typography/TypographyTestStories';
+import './Input/InputTestStories';
 import './Page/PageTestStories.js'; // Tests/2. Layout/2.5 + Page/
 import './Page/PageTestStoriesDeprecated.js'; // Tests/2. Layout/2.5 + Page/Deprecated
 import './PageHeader/PageHeaderTestStories.js'; // Tests/2. Layout/2.5 + PageHeader/
@@ -163,3 +164,6 @@ import './SegmentedToggle/testStory'; // 4.5 SegmentedToggle
 
 // The generated test component
 import './GeneratedTestComponent/index.story';
+
+// This import was added by the component generator
+import './RichTextInputArea/index.story';

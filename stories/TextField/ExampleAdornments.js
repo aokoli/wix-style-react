@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Layout, Cell } from 'wix-style-react/Layout';
 import Input from 'wix-style-react/Input';
 import FormField from 'wix-style-react/FormField';
+import Date from 'wix-style-react/new-icons/Date';
+import Search from 'wix-style-react/new-icons/Search';
 
 const defaultProps = {
   placeholder: 'Search term',
@@ -38,14 +40,27 @@ const Example = () => (
     <Cell>
       <Layout>
         <Cell span="4">
-          <FormField label="Unit">
-            <Input {...defaultProps} unit="$" />
+          <FormField label="Suffix">
+            <Input {...defaultProps} suffix={<Input.Affix>$</Input.Affix>} />
             <br />
           </FormField>
         </Cell>
         <Cell span="4">
-          <FormField label="Unit + [Status: Error]">
-            <Input {...defaultProps} unit="$" status={'error'} />
+          <FormField label="Prefix">
+            <Input
+              {...defaultProps}
+              prefix={<Input.Affix>http://</Input.Affix>}
+            />
+            <br />
+          </FormField>
+        </Cell>
+        <Cell span="4">
+          <FormField label="Suffix + [Status: Error]">
+            <Input
+              {...defaultProps}
+              suffix={<Input.Affix>$</Input.Affix>}
+              status={'error'}
+            />
             <br />
           </FormField>
         </Cell>
@@ -54,8 +69,28 @@ const Example = () => (
     <Cell>
       <Layout>
         <Cell span="4">
-          <FormField label="Help + tooltip">
-            <Input {...defaultProps} help helpMessage="I am a message" />
+          <FormField label="Icon [Prefix]">
+            <Input
+              {...defaultProps}
+              prefix={
+                <Input.IconAffix>
+                  <Date />
+                </Input.IconAffix>
+              }
+            />
+            <br />
+          </FormField>
+        </Cell>
+        <Cell span="4">
+          <FormField label="Icon [Suffix]">
+            <Input
+              {...defaultProps}
+              suffix={
+                <Input.IconAffix>
+                  <Search />
+                </Input.IconAffix>
+              }
+            />
             <br />
           </FormField>
         </Cell>

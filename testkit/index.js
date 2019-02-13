@@ -79,6 +79,7 @@ export const radioGroupTestkitFactory = testkitFactoryCreator(load('../src/Radio
 export const rangeTestkitFactory = testkitFactoryCreator(load('../src/Range/Range.driver'));
 export const richTextAreaTestkitFactory = testkitFactoryCreator(load('../src/RichTextArea/RichTextArea.driver'));
 export const richTextAreaCompositeTestkitFactory = testkitFactoryCreator(load('../src/RichTextAreaComposite/RichTextAreaComposite.driver'));
+export const richTextInputAreaTestkitFactory = uniTestkitFactoryCreator(load('../src/RichTextInputArea/RichTextInputArea.driver'));
 export const searchTestkitFactory = testkitFactoryCreator(load('../src/Search/Search.driver'));
 export const sectionHelperTestkitFactory = testkitFactoryCreator(load('../src/SectionHelper/SectionHelper.driver'));
 export const segmentedToggleTestkitFactory = uniTestkitFactoryCreator(load('../src/SegmentedToggle/SegmentedToggle.driver'));
