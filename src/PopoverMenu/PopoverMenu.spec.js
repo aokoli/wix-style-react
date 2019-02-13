@@ -154,6 +154,29 @@ describe('PopoverMenu', () => {
       expect(onHide).toHaveBeenCalled();
     });
   });
+
+  it('should not invoke onHide and onShow properties when menu is hides ', async () => {
+    const onHide = jest.fn();
+    const onShow = jest.fn();
+
+    const driver = createDriver(
+      <PopoverMenu>
+        <PopoverMenuItem dataHook={menuItemDataHook} />
+      </PopoverMenu>,
+    ).init.menuItemDataHook(menuItemDataHook);
+    driver.click();
+
+    await waitFor(() => {
+      expect(driver.menu.isShown()).toBe(true);
+      expect(onShow).not.toHaveBeenCalled();
+    });
+
+    driver.click();
+    await waitFor(() => {
+      expect(driver.menu.isShown()).toBe(false);
+      expect(onHide).not.toHaveBeenCalled();
+    });
+  });
 });
 
 describe('Testkits', () => {
