@@ -116,7 +116,7 @@ import './Carousel/index.story.js';
 import './Collapse.story';
 import './components/Dropdown/Dropdown.story.js';
 import './DropdownBase/index.story';
-import './FormField/FormField.story.js';
+import './FormField/index.story.js';
 import './GenericModalLayout/GenericModalLayout.story.js';
 import './GoogleAddressInput/index.story.js';
 import './Heading/index.story';

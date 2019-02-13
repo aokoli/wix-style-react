@@ -1,7 +1,16 @@
 import React from 'react';
-
-import CodeExample from 'wix-storybook-utils/CodeExample';
-import LiveCodeExample from '../utils/Components/LiveCodeExample';
+import { storySettings } from './storySettings';
+import { baseScope } from '../utils/Components/LiveCodeExample';
+import * as examples from './examples';
+import {
+  tab,
+  api,
+  liveCode as baseLiveCode,
+  importExample,
+  description,
+  playground,
+  testkit,
+} from 'wix-storybook-utils/Sections';
 
 import FormField from 'wix-style-react/FormField';
 import Input from 'wix-style-react/Input';
@@ -12,21 +21,14 @@ import Dropdown from 'wix-style-react/Dropdown';
 import Checkbox from 'wix-style-react/Checkbox';
 import ToggleSwitch from 'wix-style-react/ToggleSwitch';
 
-import ExampleWithLengthCount from './ExampleWithLengthCount';
-import ExampleWithLengthCountRaw from '!raw-loader!./ExampleWithLengthCount';
-import ExampleInlineWithLengthCount from './ExampleInlineWithLengthCount';
-import ExampleInlineWithLengthCountRaw from '!raw-loader!./ExampleInlineWithLengthCount';
-import ExampleWithinGridRaw from '!raw-loader!./ExampleWithinGrid';
+import styles from './examples.scss';
 
 const ID = 'formFieldId';
-
 const placeholder = 'Default text goes here...';
 const childrenExamples = [
   { label: 'Input', value: <Input placeholder={placeholder} id={ID} /> },
-
   {
     label: 'Input with char counter',
-    // eslint-disable-next-line react/prop-types
     value: ({ setCharactersLeft }) => (
       <Input
         placeholder={placeholder}
@@ -35,15 +37,12 @@ const childrenExamples = [
       />
     ),
   },
-
   {
     label: 'InputArea',
     value: <InputArea placeholder={placeholder} id={ID} />,
   },
-
   {
     label: 'InputArea with char counter',
-    // eslint-disable-next-line react/prop-types
     value: ({ setCharactersLeft }) => (
       <InputArea
         placeholder={placeholder}
@@ -76,11 +75,23 @@ const childrenExamples = [
   { label: 'ToggleSwitch', value: <ToggleSwitch /> },
 ];
 
+const Link = ({ children, ...rest }) => <a {...rest}>{children}</a>;
+
+const baseProps = {
+  autoRender: false,
+  previewProps: {
+    className: styles.livePreview,
+  },
+};
+
+const liveCode = config =>
+  baseLiveCode({ components: { ...baseScope, Link }, ...baseProps, ...config });
+
 export default {
-  category: 'Components',
-  storyName: 'FormField',
+  category: storySettings.kind,
+  storyName: storySettings.storyName,
   component: FormField,
-  componentPath: '../../src/FormField',
+  componentPath: '../../src/FormField/FormField.js',
 
   componentProps: {
     dataHook: 'storybook-formfield',
@@ -97,30 +108,57 @@ export default {
     children: childrenExamples,
     infoTooltipProps: [
       { label: 'placement left', value: { placement: 'left' } },
+      { label: 'placement right', value: { placement: 'right' } },
+      { label: 'placement top', value: { placement: 'top' } },
+      { label: 'placement bottom', value: { placement: 'bottom' } },
     ],
   },
-  examples: (
-    <div>
-      <CodeExample title="With Length Count" code={ExampleWithLengthCountRaw}>
-        <div style={{ width: '500px' }}>
-          <ExampleWithLengthCount />
-        </div>
-      </CodeExample>
 
-      <CodeExample
-        title="Inline Label With Length Count"
-        code={ExampleInlineWithLengthCountRaw}
-      >
-        <div style={{ width: '500px' }}>
-          <ExampleInlineWithLengthCount />
-        </div>
-      </CodeExample>
-
-      <LiveCodeExample
-        title="Within Grid"
-        compact
-        initialCode={ExampleWithinGridRaw}
-      />
-    </div>
-  ),
+  sections: [
+    tab({
+      title: 'Usage',
+      sections: [
+        importExample({
+          title: 'Import',
+          source: "import FormField from 'wix-style-react/FormField';",
+        }),
+        importExample({
+          title: 'Generic component to help build forms',
+          source: examples.generic,
+        }),
+        importExample({
+          title: 'With tooltip',
+          source: examples.withTooltip,
+        }),
+        description({
+          title: 'With length count',
+          text:
+            'When children is function (a.k.a. render prop), it receives setCharactersLeft which can be called with number',
+        }),
+        liveCode({
+          source: examples.withLength,
+        }),
+        liveCode({
+          title: 'Inline Label With Lenth Count',
+          source: examples.inlineLabelWithLength,
+        }),
+        liveCode({
+          title: 'Example within Grid',
+          source: examples.ExampleWithinGrid,
+        }),
+      ],
+    }),
+    tab({
+      title: 'API',
+      sections: [api()],
+    }),
+    tab({
+      title: 'TestKit',
+      sections: [testkit()],
+    }),
+    tab({
+      title: 'Playground',
+      sections: [playground()],
+    }),
+  ],
 };
